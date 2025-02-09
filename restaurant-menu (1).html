@@ -19,16 +19,16 @@
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        header {
+    header {
         position: relative;
         width: 100%;
         background: linear-gradient(135deg, var(--primary), #4A0404);
-        padding: 0;  /* Remove padding */
+        margin-top: 0;
         z-index: 98;
     }
 
@@ -882,28 +882,51 @@
         }
         let touchStartX = 0;
         let touchEndX = 0;
+        let touchStartTime = 0;
+        let touchStarted = false;
         const swipeThreshold = 50;
+        const holdThreshold = 200; // Time in milliseconds to hold
 
         document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
+            if (e.touches[0].clientX < window.innerWidth * 0.1) { // Only trigger in the first 10% of screen width
+                touchStartX = e.touches[0].screenX;
+                touchStartTime = new Date().getTime();
+                touchStarted = true;
+            }
+        }, false);
+
+        document.addEventListener('touchmove', e => {
+            if (!touchStarted) return;
+            
+            const currentX = e.touches[0].screenX;
+            const timeDiff = new Date().getTime() - touchStartTime;
+            
+            if (timeDiff > holdThreshold) {
+                const swipeDistance = currentX - touchStartX;
+                if (swipeDistance > 0) {
+                    // Update sidebar position during swipe for smooth animation
+                    const progress = Math.min(swipeDistance / window.innerWidth, 1);
+                    sidebar.style.transform = `translateX(${-100 + (progress * 100)}%)`;
+                }
+            }
         }, false);
 
         document.addEventListener('touchend', e => {
+            if (!touchStarted) return;
+            
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, false);
-
-        function handleSwipe() {
+            const timeDiff = new Date().getTime() - touchStartTime;
             const swipeDistance = touchEndX - touchStartX;
             
-            if (swipeDistance > swipeThreshold) {
-                // Right swipe
+            if (timeDiff > holdThreshold && swipeDistance > swipeThreshold) {
                 openSidebar();
-            } else if (swipeDistance < -swipeThreshold) {
-                // Left swipe
-                closeSidebarMenu();
+            } else {
+                // Reset sidebar position if swipe wasn't completed
+                sidebar.style.transform = 'translateX(-100%)';
             }
-        }
+            
+            touchStarted = false;
+        }, false);
         // Toggle favorites panel
         favoritesMenu.onclick = () => {
             favoritesPanel.classList.toggle('show');
