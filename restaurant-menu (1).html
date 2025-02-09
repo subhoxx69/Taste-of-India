@@ -445,54 +445,27 @@
         .favorites-panel.show {
             display: block;
         }
-        .search-button {
-        position: fixed;
-        bottom: 2rem;
-        right: 8rem;
-        background: #8B0000;
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(139,0,0,0.3);
-        cursor: pointer;
-        z-index: 97;
-        font-family: 'Poppins', sans-serif;
-    }
-        .search-panel {
-        position: fixed;
-        bottom: 5rem;
-        right: 8rem;
-        background: white;
+        
+        .favorite-content {
         padding: 1rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        z-index: 97;
-        width: 300px;
-        display: none;
+        background: white;
+        border-bottom: 1px solid var(--border);
     }
-        .search-results {
-        max-height: 300px;
-        overflow-y: auto;
-    }
+    .favorite-item {
+    position: relative;
+    touch-action: pan-y pinch-zoom;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-    .search-result-item {
-        padding: 0.5rem;
-        border-bottom: 1px solid #E6D5C5;
-        cursor: pointer;
+    .favorite-item.swiping {
+        background: rgba(255, 0, 0, 0.1);
     }
 
-    .search-result-item:hover {
-        background: var(--background);
+    .favorite-item.removing {
+        transform: translateX(-100%);
+        opacity: 0;
     }
 
-        .favorite-item {
-            padding: 0.5rem;
-            border-bottom: 1px solid #E6D5C5;
-        }
-
-        .favorite-btn.active {
-                color: #FF4081;
-        }
         body.sidebar-open {
             overflow: hidden;
         }
@@ -516,14 +489,6 @@
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="close-sidebar" id="closeSidebar">×</div>
-                <div class="search-button" id="searchButton">
-                    🔍
-                </div>
-                
-                <div class="search-panel" id="searchPanel">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Gericht suchen...">
-                    <div class="search-results" id="searchResults"></div>
-                </div>
             </div>
             <div class="sidebar-content">
                 <a href="#Hauptgerichte" class="category-link active">Hauptgerichte</a>
@@ -958,45 +923,6 @@
             }
         }, false);
 
-        const searchButton = document.getElementById('searchButton');
-        const searchPanel = document.getElementById('searchPanel');
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-
-        searchButton.onclick = () => {
-            searchPanel.style.display = searchPanel.style.display === 'none' ? 'block' : 'none';
-            if (searchPanel.style.display === 'block') {
-                searchInput.focus();
-            }
-        };
-
-        searchInput.oninput = () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            const menuItems = document.querySelectorAll('.dish-name');
-            searchResults.innerHTML = '';
-
-            menuItems.forEach(item => {
-                if (item.textContent.toLowerCase().includes(searchTerm) && searchTerm !== '') {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'search-result-item';
-                    resultItem.textContent = item.textContent;
-                    resultItem.onclick = () => {
-                        const menuCard = item.closest('.menu-card');
-                        menuCard.scrollIntoView({ behavior: 'smooth' });
-                        searchPanel.style.display = 'none';
-                    };
-                    searchResults.appendChild(resultItem);
-                }
-            });
-        };
-
-        // Close search panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!searchPanel.contains(e.target) && e.target !== searchButton) {
-                searchPanel.style.display = 'none';
-            }
-        });
-
         document.addEventListener('touchend', e => {
             if (!touchStarted) return;
             
@@ -1017,6 +943,94 @@
         favoritesMenu.onclick = () => {
             favoritesPanel.classList.toggle('show');
         };
+        function initializeSwipeListeners() {
+    const favoriteItems = document.querySelectorAll('.favorite-item');
+    let touchStartX = 0;
+    let touchStartTime = 0;
+    let currentItem = null;
+    const swipeThreshold = 100;
+    const timeThreshold = 300;
+
+    favoriteItems.forEach(item => {
+        item.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartTime = new Date().getTime();
+            currentItem = item;
+            item.style.transition = 'none';
+        }, { passive: true });
+
+        item.addEventListener('touchmove', e => {
+            if (!currentItem) return;
+            
+            const deltaX = e.touches[0].clientX - touchStartX;
+            if (deltaX < 0) {
+                e.preventDefault();
+                currentItem.style.transform = `translateX(${deltaX}px)`;
+                
+                // Add visual feedback
+                if (deltaX < -50) {
+                    currentItem.classList.add('swiping');
+                } else {
+                    currentItem.classList.remove('swiping');
+                }
+            }
+        }, { passive: false });
+
+        item.addEventListener('touchend', e => {
+            if (!currentItem) return;
+            
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaTime = new Date().getTime() - touchStartTime;
+            currentItem.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+
+            if (deltaX < -swipeThreshold && deltaTime < timeThreshold) {
+                // Remove from favorites
+                const itemId = currentItem.dataset.favoriteId;
+                currentItem.classList.add('removing');
+                
+                // Update favorites array and localStorage
+                setTimeout(() => {
+                    favorites = favorites.filter(id => id !== itemId);
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                    
+                    // Update heart button in menu
+                    const menuButton = document.querySelector(`.menu-card[data-id="${itemId}"] .favorite-btn`);
+                    if (menuButton) menuButton.textContent = '🤍';
+                    
+                    updateFavorites();
+                }, 300);
+            } else {
+                // Reset position if not swiped far enough
+                currentItem.style.transform = 'translateX(0)';
+                currentItem.classList.remove('swiping');
+            }
+            
+            currentItem = null;
+        }, { passive: true });
+    });
+}
+
+        function updateFavorites() {
+            favCount.textContent = favorites.length;
+            favoritesList.innerHTML = '';
+            favorites.forEach(id => {
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) {
+                    const name = card.querySelector('.dish-name').textContent;
+                    const price = card.querySelector('.dish-price').textContent;
+                    favoritesList.innerHTML += `
+                        <div class="favorite-item" data-favorite-id="${id}">
+                            <div class="favorite-content">
+                                <strong>${name}</strong>
+                                <div>${price}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            initializeSwipeListeners();
+        }
 
         // Scroll to top functionality
         const scrollTop = document.getElementById('scrollTop');
