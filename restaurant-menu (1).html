@@ -25,27 +25,32 @@
         }
 
         header {
-        position: relative;  /* Change from fixed to relative */
+        position: relative;
         width: 100%;
         background: linear-gradient(135deg, var(--primary), #4A0404);
-        padding: 1.5rem 0;
+        padding: 0;  /* Remove padding */
         z-index: 98;
     }
 
         body {
-            padding-top: 70px;
-        }
+        margin: 0;  /* Reset body margin */
+        padding: 0;  /* Reset body padding */
+        background-color: var(--background);
+        color: var(--text);
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+    }
 
         .header-content {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 0 1rem;
+        padding: 0.5rem 1rem;  /* Adjust padding as needed */
         display: flex;
         justify-content: space-between;
         align-items: center;
         position: relative;
         height: 70px;
-        z-index: 97;  /* Lower z-index to keep it behind the menu */
+        z-index: 97;
     }
 
         .logo {
