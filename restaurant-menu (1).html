@@ -445,6 +445,45 @@
         .favorites-panel.show {
             display: block;
         }
+        .search-button {
+        position: fixed;
+        bottom: 2rem;
+        right: 8rem;
+        background: #8B0000;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(139,0,0,0.3);
+        cursor: pointer;
+        z-index: 97;
+        font-family: 'Poppins', sans-serif;
+    }
+        .search-panel {
+        position: fixed;
+        bottom: 5rem;
+        right: 8rem;
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        z-index: 97;
+        width: 300px;
+        display: none;
+    }
+        .search-results {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .search-result-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #E6D5C5;
+        cursor: pointer;
+    }
+
+    .search-result-item:hover {
+        background: var(--background);
+    }
 
         .favorite-item {
             padding: 0.5rem;
@@ -477,6 +516,14 @@
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="close-sidebar" id="closeSidebar">×</div>
+                <div class="search-button" id="searchButton">
+                    🔍
+                </div>
+                
+                <div class="search-panel" id="searchPanel">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Gericht suchen...">
+                    <div class="search-results" id="searchResults"></div>
+                </div>
             </div>
             <div class="sidebar-content">
                 <a href="#Hauptgerichte" class="category-link active">Hauptgerichte</a>
@@ -910,6 +957,45 @@
                 }
             }
         }, false);
+
+        const searchButton = document.getElementById('searchButton');
+        const searchPanel = document.getElementById('searchPanel');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchButton.onclick = () => {
+            searchPanel.style.display = searchPanel.style.display === 'none' ? 'block' : 'none';
+            if (searchPanel.style.display === 'block') {
+                searchInput.focus();
+            }
+        };
+
+        searchInput.oninput = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const menuItems = document.querySelectorAll('.dish-name');
+            searchResults.innerHTML = '';
+
+            menuItems.forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm) && searchTerm !== '') {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.textContent = item.textContent;
+                    resultItem.onclick = () => {
+                        const menuCard = item.closest('.menu-card');
+                        menuCard.scrollIntoView({ behavior: 'smooth' });
+                        searchPanel.style.display = 'none';
+                    };
+                    searchResults.appendChild(resultItem);
+                }
+            });
+        };
+
+        // Close search panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchPanel.contains(e.target) && e.target !== searchButton) {
+                searchPanel.style.display = 'none';
+            }
+        });
 
         document.addEventListener('touchend', e => {
             if (!touchStarted) return;
