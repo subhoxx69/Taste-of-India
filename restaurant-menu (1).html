@@ -25,13 +25,11 @@
         }
 
         header {
+        position: relative;  /* Change from fixed to relative */
+        width: 100%;
         background: linear-gradient(135deg, var(--primary), #4A0404);
         padding: 1.5rem 0;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 98;
     }
 
         body {
@@ -39,16 +37,16 @@
         }
 
         .header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    height: 70px;
-    z-index: 97;  /* Lower z-index */
-}
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        height: 70px;
+        z-index: 97;  /* Lower z-index to keep it behind the menu */
+    }
 
         .logo {
             color: var(--card);
@@ -110,7 +108,7 @@
         height: 100%;
         background: var(--card);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
+        z-index: 999;  /* Higher z-index to appear in front */
         display: flex;
         flex-direction: column;
         padding: 0;
