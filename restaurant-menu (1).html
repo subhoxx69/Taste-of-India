@@ -445,27 +445,15 @@
         .favorites-panel.show {
             display: block;
         }
-        
-        .favorite-content {
-        padding: 1rem;
-        background: white;
-        border-bottom: 1px solid var(--border);
-    }
-    .favorite-item {
-    position: relative;
-    touch-action: pan-y pinch-zoom;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
 
-    .favorite-item.swiping {
-        background: rgba(255, 0, 0, 0.1);
-    }
+        .favorite-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #E6D5C5;
+        }
 
-    .favorite-item.removing {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-
+        .favorite-btn.active {
+                color: #FF4081;
+        }
         body.sidebar-open {
             overflow: hidden;
         }
@@ -943,94 +931,6 @@
         favoritesMenu.onclick = () => {
             favoritesPanel.classList.toggle('show');
         };
-        function initializeSwipeListeners() {
-    const favoriteItems = document.querySelectorAll('.favorite-item');
-    let touchStartX = 0;
-    let touchStartTime = 0;
-    let currentItem = null;
-    const swipeThreshold = 100;
-    const timeThreshold = 300;
-
-    favoriteItems.forEach(item => {
-        item.addEventListener('touchstart', e => {
-            touchStartX = e.touches[0].clientX;
-            touchStartTime = new Date().getTime();
-            currentItem = item;
-            item.style.transition = 'none';
-        }, { passive: true });
-
-        item.addEventListener('touchmove', e => {
-            if (!currentItem) return;
-            
-            const deltaX = e.touches[0].clientX - touchStartX;
-            if (deltaX < 0) {
-                e.preventDefault();
-                currentItem.style.transform = `translateX(${deltaX}px)`;
-                
-                // Add visual feedback
-                if (deltaX < -50) {
-                    currentItem.classList.add('swiping');
-                } else {
-                    currentItem.classList.remove('swiping');
-                }
-            }
-        }, { passive: false });
-
-        item.addEventListener('touchend', e => {
-            if (!currentItem) return;
-            
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaTime = new Date().getTime() - touchStartTime;
-            currentItem.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-
-            if (deltaX < -swipeThreshold && deltaTime < timeThreshold) {
-                // Remove from favorites
-                const itemId = currentItem.dataset.favoriteId;
-                currentItem.classList.add('removing');
-                
-                // Update favorites array and localStorage
-                setTimeout(() => {
-                    favorites = favorites.filter(id => id !== itemId);
-                    localStorage.setItem('favorites', JSON.stringify(favorites));
-                    
-                    // Update heart button in menu
-                    const menuButton = document.querySelector(`.menu-card[data-id="${itemId}"] .favorite-btn`);
-                    if (menuButton) menuButton.textContent = '🤍';
-                    
-                    updateFavorites();
-                }, 300);
-            } else {
-                // Reset position if not swiped far enough
-                currentItem.style.transform = 'translateX(0)';
-                currentItem.classList.remove('swiping');
-            }
-            
-            currentItem = null;
-        }, { passive: true });
-    });
-}
-
-        function updateFavorites() {
-            favCount.textContent = favorites.length;
-            favoritesList.innerHTML = '';
-            favorites.forEach(id => {
-                const card = document.querySelector(`[data-id="${id}"]`);
-                if (card) {
-                    const name = card.querySelector('.dish-name').textContent;
-                    const price = card.querySelector('.dish-price').textContent;
-                    favoritesList.innerHTML += `
-                        <div class="favorite-item" data-favorite-id="${id}">
-                            <div class="favorite-content">
-                                <strong>${name}</strong>
-                                <div>${price}</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-            
-            initializeSwipeListeners();
-        }
 
         // Scroll to top functionality
         const scrollTop = document.getElementById('scrollTop');
