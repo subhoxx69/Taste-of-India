@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Taste of India - Digitale Speisekarte</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+        :root {
+            --primary: #8B0000;
+            --secondary: #FFA000;
+            --accent: #FF4081;
+            --background: #FFF8E7;
+            --card: #FFFFFF;
+            --text: #2C1810;
+            --border: #E6D5C5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L45 15L30 30L15 15z' fill='%23FFA000' fill-opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #4A0404);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    height: 70px;
+    z-index: 97;  /* Lower z-index */
+}
+
+        .logo {
+            color: var(--card);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .language-selector {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .language-selector option {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            padding-top: 1rem;
+        }
+
+        .hamburger-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+    width: 85%;
+    max-width: 300px;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    background: var(--card);
+    transition: left 0.3s ease;
+    z-index: 999;  /* Increased z-index */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+        .sidebar-header {
+        height: 70px;
+        background: #8B0000;  /* This matches the header color */
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;  /* Increased z-index */
+    }
+        .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 100px;
+        margin-top: 0;
+        position: relative;
+        z-index: 99;  /* Add this z-index */
+    }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 98;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .category-link {
+                display: block;
+                padding: 0.75rem 1rem;
+                margin: 0.25rem 0;
+                background: transparent;
+                border-radius: 8px;
+                text-decoration: none;
+                color: var(--text);
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border-left: 3px solid transparent;
+                font-size: 0.95rem;
+            }
+
+            .category-link:hover, 
+            .category-link:active,
+            .category-link.active {
+                background: var(--background);
+                border-left-color: var(--primary);
+                color: var(--primary);
+            }
+
+        .category-link:hover, .category-link.active {
+            background: var(--background);
+            border-left-color: var(--primary);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .menu-content {
+            flex: 1;
+        }
+
+        .menu-section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--secondary);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .dish-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-right: 1rem;
+            line-height: 1.3;
+        }
+
+        .dish-price {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.25rem;
+            background: var(--background);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+
+        .dish-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .dietary-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dietary-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ddd;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .favorite-btn:hover {
+            background: rgba(255,64,129,0.1);
+        }
+
+        .favorite-btn.active {
+            color: var(--accent);
+        }
+
+        .chat-assistant {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(139,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chat-assistant:hover {
+            transform: scale(1.1);
+            background: #A00000;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+            padding-top: 1rem;
+        }
+
+            .sidebar {
+                width: 260px;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .menu-grid {
+                gap: 1rem;
+            }
+        }
+
+        /* Add new styles for favorites and scroll-to-top */
+        .favorites-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 1rem;
+            background: #8B0000;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(139,0,0,0.3);
+            cursor: pointer;
+            z-index: 97;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 6rem;
+            right: 1rem;
+            background: #8B0000;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 97;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 16px rgba(139,0,0,0.3);
+        }
+
+
+        .favorites-panel {
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            z-index: 97;
+            max-width: 300px;
+            display: none;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .close-sidebar {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .favorites-panel.show {
+            display: block;
+        }
+
+        .favorite-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #E6D5C5;
+        }
+
+        .favorite-btn.active {
+                color: #FF4081;
+        }
+        body.sidebar-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+            <h1 class="logo">Taste of India</h1>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="close-sidebar" id="closeSidebar">×</div>
+            </div>
+            <div class="sidebar-content">
+                <a href="#Hauptgerichte" class="category-link active">Hauptgerichte</a>
+                <a href="#ChickenCurrys" class="category-link">Chicken Currys</a>
+                <a href="#LammDelikatessen" class="category-link">Lamm Delikatessen</a>
+                <a href="#Biryani" class="category-link">Biryani</a>
+                <a href="#Vegetarische" class="category-link">Vegetarische</a>
+                <a href="#Suppen" class="category-link">Suppen</a>
+                <a href="#Vorspeisen" class="category-link">Vorspeisen</a>
+                <a href="#IndischesBrot" class="category-link">Indisches Brot</a>
+                <a href="#Beilagen" class="category-link">Beilagen</a>
+                <a href="#Meeresfrüchte" class="category-link">Meeresfrüchte</a>
+                <a href="#FrischeSalate" class="category-link">Frische Salate</a>
+                <a href="#KinderMenu" class="category-link">Kinder Menu</a>
+                <a href="#Desserts" class="category-link">Desserts</a>
+                <a href="#Tee" class="category-link">Tee</a>
+                <a href="#Getränke" class="category-link">Getränke</a>
+                <a href="#IndischeGetränke" class="category-link">Indische Getränke</a>
+                <a href="#AlkoholischeGetränke" class="category-link">Alkoholische Getränke</a>
+            </div>
+        </nav>  
+
+        <main class="menu-content">
+            <section id="Hauptgerichte" class="menu-section">
+                <h2 class="section-title">Hauptgerichte</h2>
+                <div class="menu-grid">
+                    <div class="menu-card" data-id="01">
+                        <img src="https://www.hungrylankan.com/wp-content/uploads/2022/12/dosa-and-sambar-1.jpg" alt="Tandoori Chicken" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3 class="dish-name">#01 Tandoori Chicken</h3>
+                                <span class="dish-price">15,50€</span>
+                            </div>
+                            <p class="dish-description">Zartes Hühnerfleisch, mariniert in Joghurt, Knoblauch und Ingwer, am Spieß im Tandoor-Ofen gegrillt.</p>
+                            <div class="card-footer">
+                                <div class="dietary-info">
+                                    <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                </div>
+                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="menu-card" data-id="02">
+                        <img src="https://mattcooperbites.com/wp-content/uploads/2023/11/Tikka.jpg" alt="Chicken Tikka" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3 class="dish-name">#02 Chicken Tikka</h3>
+                                <span class="dish-price">13,50€</span>
+                            </div>
+                            <p class="dish-description">Saftige Hähnchenstücke, 24 Stunden in aromatischen Gewürzen mariniert und anschließend am Spieß im Tandoor-Ofen gegrillt.</p>
+                            <div class="card-footer">
+                                <div class="dietary-info">
+                                    <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                </div>
+                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="menu-card" data-id="03">
+                        <img src="https://cdn3.didevelop.com/public/cdn/533_df5ebcbeb2c37b0a5c3fd0ee5198c99b.jpeg" alt="Tandoori Garnelen" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3 class="dish-name">#03 Tandoori Garnelen</h3>
+                                <span class="dish-price">22,50€</span>
+                            </div>
+                            <p class="dish-description">Garnelen, 24 Stunden in Gewürzen mariniert, anschließend im traditionellen Tonofen gebacken, serviert mit Zitronen und Joghurt.</p>
+                            <div class="card-footer">
+                                <div class="dietary-info">
+                                    <i class="fas fa-fish" title="Nicht vegetarisch"></i>
+                                </div>
+                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="menu-card" data-id="04">
+                        <img src="https://smokeandflame.net/cdn/shop/articles/Screenshot_2024-02-24_053330_800x.png?v=1708753216" alt="Indischer Grill Mix" class="card-image">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3 class="dish-name">#04 Indischer Grillmix</h3>
+                                <span class="dish-price">26,90€</span>
+                            </div>
+                            <p class="dish-description">Eine köstliche Auswahl aus dem Tandoor-Grill: gegrillter Lamm, Hähnchen und Meeresfrüchte – perfekt für Fleischliebhaber</p>
+                            <div class="card-footer">
+                                <div class="dietary-info">
+                                    <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                </div>
+                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+                    <main class="menu-content">
+                        <section id="ChickenCurrys" class="menu-section">
+                            <h2 class="section-title">Chicken Currys</h2>
+                            <div class="menu-grid">
+                                <div class="menu-card" data-id="05">
+                                    <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2022/08/chicken-korma-recipe.jpg" alt="Chicken Korma" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#05 Chicken Korma</h3>
+                                            <span class="dish-price">13,90€</span>
+                                        </div>
+                                        <p class="dish-description">Hühnerfleisch, spezieal korma sauce, nüss und sahne mit indisch Gewürzen</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="06">
+                                    <img src="https://www.samaheats.com/wp-content/uploads/2024/03/Untitled-design-15-500x500.png" alt="Butter Chicken" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#06 Butter Chicken</h3>
+                                            <span class="dish-price">14,50€</span>
+                                        </div>
+                                        <p class="dish-description">Im Tandoor zubereitetes, mariniertes Hühnerfleisch, serviert in einer mit Gewürzen und Tomaten angereicherten Buttersauce</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="07">
+                                    <img src="https://www.kitchensanctuary.com/wp-content/uploads/2020/02/Chicken-Madras-square-FS-35.jpg" alt="Chicken Madras" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#07 Chicken Madras</h3>
+                                            <span class="dish-price">13,50€</span>
+                                        </div>
+                                        <p class="dish-description">Ein Spezialgericht aus Südindien mit Kokosmilch, einer Knoblauchmischung & Ingwer</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="08">
+                                    <img src="https://www.shemins.com/wp-content/uploads/2017/03/shemins-chicken-tikka-masala-LR-1280x1280.jpg" alt="Chicken Tikka Masala" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#08 Chicken Tikka Masala</h3>
+                                            <span class="dish-price">14,50€</span>
+                                        </div>
+                                        <p class="dish-description">Zarte Hühnerfleischstücke in Ingwer, Knoblauch und Joghurt mariniert mit speziellen Kräutern und Gewürzen im Tandoor gegrillt, mit Butter in frischer Tomaten-Cashew Sauce kurz gebraten.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="09">
+                                    <img src="https://theazizkitchen.com/wp-content/uploads/2021/08/Image_3.jpg" alt="Chicken Chana" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#09 Chicken Chana</h3>
+                                            <span class="dish-price">12,90€</span>
+                                        </div>
+                                        <p class="dish-description">Mit Hähnchenfleisch, Kichererbsen & pikanter Currysoße.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="10">
+                                    <img src="https://nishkitchen.com/wp-content/uploads/2018/05/Chicken-Vindaloo-1B.jpg" alt="Chicken Vindaloo" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#10 Chicken Vindaloo</h3>
+                                            <span class="dish-price">13,90€</span>
+                                        </div>
+                                        <p class="dish-description">Zarte Hühnerfleischstücke in in einer pikanten Sauce gegart und mit Gewürz, zwiebeln und jungen Kartoffeln serviert.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="11">
+                                    <img src="https://www.whiskaffair.com/wp-content/uploads/2021/10/Andhra-Chicken-Curry-2-3.jpg" alt="Chicken-Curry" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#11 Chicken-Curry</h3>
+                                            <span class="dish-price">13,90€</span>
+                                        </div>
+                                        <p class="dish-description">Saftiges hähnchenfleisch in pikanter Currysauce aus Ingwer, Zwiebeln, Knoblauch und indische Gewürze</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="12">
+                                    <img src="https://www.hairybikers.com/uploads/images/_recipeImage/ChickenJalfrazi.jpg" alt="Chicken Jhal Farezi" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#12 Chicken Jhal Farezi</h3>
+                                            <span class="dish-price">14,90€</span>
+                                        </div>
+                                        <p class="dish-description">Scharfes Curry mit Hühnerfilet, Zwiebeln, Ingwer, Chili, Tomaten & Paprika.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="13">
+                                    <img src="https://www.theendlessmeal.com/wp-content/uploads/2020/04/Mango-Chicken-Curry.jpg" alt="Chicken Mango" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#13 Chicken Mango</h3>
+                                            <span class="dish-price">14,50€</span>
+                                        </div>
+                                        <p class="dish-description">Eine Mischung aus Mango verleiht diesem Curry seinen unverwechselbaren, lebendigen Geschmack. Ein süßes, sowie herzhaftes modernes indisches Gericht.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="14">
+                                    <img src="https://thebigmansworld.com/wp-content/uploads/2023/12/chicken-saag-recipe.jpg" alt="Chicken Saag" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#14 Chicken Saag</h3>
+                                            <span class="dish-price">13,90€</span>
+                                        </div>
+                                        <p class="dish-description">Ein Curry mit Spinat & Hähnchenfleisch nach indischer Art.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="15">
+                                    <img src="https://notacurry.com/wp-content/uploads/2021/01/garlic-chicken-recipe-china-town-style-500x500.jpg" alt="Chilli Chicken" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#15 Chilli Chicken</h3>
+                                            <span class="dish-price">13,90€</span>
+                                        </div>
+                                        <p class="dish-description">Hähnchenfleisch, knoblauch, zwiebeln, ingwer, Paprika & soya soße.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="menu-card" data-id="16">
+                                    <img src="https://gusscooks.com/wp-content/uploads/2020/10/curry-1-683x1024.jpg" alt="Chicken Veg" class="card-image">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h3 class="dish-name">#16 Chicken Veg</h3>
+                                            <span class="dish-price">12,90€</span>
+                                        </div>
+                                        <p class="dish-description">Mit Hähnchenfleisch, Gemüse & mittelscharfer Soße.</p>
+                                        <div class="card-footer">
+                                            <div class="dietary-info">
+                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
+                                            </div>
+                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="favorites-menu" id="favoritesMenu">
+        ❤️ Favoriten (<span id="favCount">0</span>)
+    </div>
+
+    <div class="favorites-panel" id="favoritesPanel">
+        <div id="favoritesList"></div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop" style="display: none;">
+        ⬆️
+    </button>
+
+    <script>
+        // Initialize favorites
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const favCount = document.getElementById('favCount');
+        const favoritesMenu = document.getElementById('favoritesMenu');
+        const favoritesPanel = document.getElementById('favoritesPanel');
+        const favoritesList = document.getElementById('favoritesList');
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const body = document.body;
+
+        function openSidebar() {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            body.classList.add('sidebar-open');
+        }
+
+        function closeSidebarMenu() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            body.classList.remove('sidebar-open');
+        }
+
+        hamburgerMenu.addEventListener('click', openSidebar);
+        closeSidebar.addEventListener('click', closeSidebarMenu);
+        overlay.addEventListener('click', closeSidebarMenu);
+
+        // Close sidebar when clicking a category on mobile
+        const categoryLinks = document.querySelectorAll('.category-link');
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeSidebarMenu();
+                }
+            });
+        });
+
+        // Initialize favorite buttons
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            const card = btn.closest('.menu-card');
+            const id = card.dataset.id;
+            
+            // Set initial state
+            if (favorites.includes(id)) {
+                btn.textContent = '❤️';
+            }
+            
+            btn.onclick = function() {
+                if (favorites.includes(id)) {
+                    favorites = favorites.filter(fid => fid !== id);
+                    btn.textContent = '🤍';
+                } else {
+                    favorites.push(id);
+                    btn.textContent = '❤️';
+                }
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                updateFavorites();
+            };
+        });
+
+        // Update favorites panel
+        function updateFavorites() {
+            favCount.textContent = favorites.length;
+            favoritesList.innerHTML = '';
+            favorites.forEach(id => {
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) {
+                    const name = card.querySelector('.dish-name').textContent;
+                    const price = card.querySelector('.dish-price').textContent;
+                    favoritesList.innerHTML += `
+                        <div class="favorite-item">
+                            <strong>${name}</strong>
+                            <div>${price}</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // Toggle favorites panel
+        favoritesMenu.onclick = () => {
+            favoritesPanel.classList.toggle('show');
+        };
+
+        // Scroll to top functionality
+        const scrollTop = document.getElementById('scrollTop');
+
+        window.onscroll = () => {
+            if (window.pageYOffset > 300) {
+                scrollTop.style.display = 'flex';
+            } else {
+                scrollTop.style.display = 'none';
+            }
+        };
+
+        scrollTop.onclick = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+
+        // Initial update
+        updateFavorites();
+    </script>
+</body>
+</html>
