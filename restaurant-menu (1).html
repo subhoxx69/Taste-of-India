@@ -448,20 +448,23 @@
 
         .favorite-item {
             position: relative;
-            transition: all 0.3s ease;
             transform-origin: right;
             background: white;
             overflow: hidden;
+            transition: height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+            height: auto;
         }
         .favorite-item.swiping {
         cursor: grabbing;
         }
         .favorite-item.removing {
-            transform: translateX(-100%);
-            opacity: 0;
             height: 0;
-            margin: 0;
-            padding: 0;
+            opacity: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            transform: translateX(-100%);
         }
 
         .swipe-hint {
@@ -486,6 +489,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
+            transition: transform 0.3s ease;
         }
         .delete-bg {
             position: absolute;
@@ -982,71 +986,88 @@
         };
         
         function updateFavorites() {
-    favCount.textContent = favorites.length;
-    favoritesList.innerHTML = '';
-    favorites.forEach(id => {
-        const card = document.querySelector(`[data-id="${id}"]`);
-        if (card) {
-            const name = card.querySelector('.dish-name').textContent;
-            const price = card.querySelector('.dish-price').textContent;
-            const itemElement = document.createElement('div');
-            itemElement.className = 'favorite-item';
-            itemElement.dataset.id = id;
-            itemElement.innerHTML = `
-                <div class="delete-bg">Delete</div>
-                <div class="favorite-item-content">
-                    <strong>${name}</strong>
-                    <div class="price">${price}</div>
-                </div>
-            `;
-            
-            // Add swipe functionality to each item
-            let touchStartX = 0;
-            let currentX = 0;
-            const content = itemElement.querySelector('.favorite-item-content');
-            
-            itemElement.addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
-                itemElement.classList.add('swiping');
-            });
+            favCount.textContent = favorites.length;
+            favoritesList.innerHTML = '';
+            favorites.forEach(id => {
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) {
+                    const name = card.querySelector('.dish-name').textContent;
+                    const price = card.querySelector('.dish-price').textContent;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'favorite-item';
+                    itemElement.dataset.id = id;
+                    itemElement.innerHTML = `
+                        <div class="delete-bg">Delete</div>
+                        <div class="favorite-item-content">
+                            <strong>${name}</strong>
+                            <div class="price">${price}</div>
+                        </div>
+                    `;
+                    
+                    let touchStartX = 0;
+                    let currentX = 0;
+                    const content = itemElement.querySelector('.favorite-item-content');
+                    
+                    function removeFavoriteItem() {
+                        const height = itemElement.offsetHeight;
+                        itemElement.style.height = `${height}px`;
+                        
+                        // Force a reflow
+                        itemElement.offsetHeight;
+                        
+                        itemElement.classList.add('removing');
+                        
+                        setTimeout(() => {
+                            const cardToUpdate = document.querySelector(`[data-id="${id}"]`);
+                            if (cardToUpdate) {
+                                const favBtn = cardToUpdate.querySelector('.favorite-btn');
+                                favBtn.textContent = '🤍';
+                            }
+                            favorites = favorites.filter(fid => fid !== id);
+                            localStorage.setItem('favorites', JSON.stringify(favorites));
+                            
+                            // Remove the element after animation
+                            setTimeout(() => {
+                                itemElement.remove();
+                                updateFavCount();
+                            }, 300);
+                        }, 50);
+                    }
 
-            itemElement.addEventListener('touchmove', e => {
-                currentX = e.touches[0].clientX;
-                const diff = currentX - touchStartX;
-                if (diff < 0) { // Only allow left swipe
-                    const translate = Math.max(diff, -100);
-                    content.style.transform = `translateX(${translate}px)`;
-                }
-            });
+                    itemElement.addEventListener('touchstart', e => {
+                        touchStartX = e.touches[0].clientX;
+                        currentX = touchStartX;
+                    });
 
-            itemElement.addEventListener('touchend', e => {
-                const swipeDistance = currentX - touchStartX;
-                itemElement.classList.remove('swiping');
-                
-                if (swipeDistance < -50) { // Reduced threshold for easier deletion
-                    // Remove from favorites
-                    itemElement.classList.add('removing');
-                    setTimeout(() => {
-                        const cardToUpdate = document.querySelector(`[data-id="${id}"]`);
-                        if (cardToUpdate) {
-                            const favBtn = cardToUpdate.querySelector('.favorite-btn');
-                            favBtn.textContent = '🤍';
+                    itemElement.addEventListener('touchmove', e => {
+                        currentX = e.touches[0].clientX;
+                        const diff = currentX - touchStartX;
+                        if (diff < 0) { // Only allow left swipe
+                            const translate = Math.max(diff, -100);
+                            content.style.transform = `translateX(${translate}px)`;
                         }
-                        favorites = favorites.filter(fid => fid !== id);
-                        localStorage.setItem('favorites', JSON.stringify(favorites));
-                        updateFavorites();
-                    }, 300);
-                } else {
-                    // Reset position if not swiped enough
-                    content.style.transform = '';
+                    });
+
+                    itemElement.addEventListener('touchend', e => {
+                        const swipeDistance = currentX - touchStartX;
+                        
+                        if (swipeDistance < -50) { // Threshold for deletion
+                            removeFavoriteItem();
+                        } else {
+                            // Reset position if not swiped enough
+                            content.style.transform = '';
+                        }
+                    });
+
+                    favoritesList.appendChild(itemElement);
                 }
             });
-
-            favoritesList.appendChild(itemElement);
         }
-    });
-}
 
+        // Add this helper function to update just the count
+        function updateFavCount() {
+            favCount.textContent = favorites.length;
+        }
         // Initial update
         updateFavorites();
     </script>
