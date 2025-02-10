@@ -509,6 +509,12 @@
         .favorite-item.swiping .favorite-item-content {
             cursor: grabbing;
         }
+        .dish-id {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
         .favorite-btn.active {
                 color: #FF4081;
         }
@@ -537,35 +543,38 @@
                 <div class="close-sidebar" id="closeSidebar">×</div>
             </div>
             <div class="sidebar-content">
-                <a href="#Hauptgerichte" class="category-link active">Hauptgerichte</a>
-                <a href="#ChickenCurrys" class="category-link">Chicken Currys</a>
-                <a href="#LammDelikatessen" class="category-link">Lamm Delikatessen</a>
-                <a href="#Biryani" class="category-link">Biryani</a>
-                <a href="#Vegetarische" class="category-link">Vegetarische</a>
                 <a href="#Suppen" class="category-link">Suppen</a>
                 <a href="#Vorspeisen" class="category-link">Vorspeisen</a>
                 <a href="#IndischesBrot" class="category-link">Indisches Brot</a>
+                <a href="#Hauptgerichte" class="category-link">Hauptgerichte</a>
+                <a href="#Orientalische" class="category-link">Orientalische</a>
+                <a href="#Lammgerichte" class="category-link">Lammgerichte</a>
+                <a href="#ChickenCurry" class="category-link">Chicken Curry</a>
+                <a href="#Vegetarische" class="category-link">Vegetarische</a>
+                <a href="#Biryani" class="category-link">Biryani</a>
                 <a href="#Beilagen" class="category-link">Beilagen</a>
-                <a href="#Meeresfrüchte" class="category-link">Meeresfrüchte</a>
-                <a href="#FrischeSalate" class="category-link">Frische Salate</a>
-                <a href="#KinderMenu" class="category-link">Kinder Menu</a>
-                <a href="#Desserts" class="category-link">Desserts</a>
+                <a href="#Salad" class="category-link">Salad</a>
+                <a href="#MeeresSpezialitaten" class="category-link">Meeres Spezialitäten</a>
+                <a href="#Dessert" class="category-link">Dessert</a>
+                <a href="#Indische" class="category-link">Indische</a>
+                <a href="#Getranke" class="category-link">Getränke</a>
+                <a href="#AlkoholischeGetranke" class="category-link">Alkoholische Getränke</a>
                 <a href="#Tee" class="category-link">Tee</a>
-                <a href="#Getränke" class="category-link">Getränke</a>
-                <a href="#IndischeGetränke" class="category-link">Indische Getränke</a>
-                <a href="#AlkoholischeGetränke" class="category-link">Alkoholische Getränke</a>
             </div>
         </nav>  
 
         <main class="menu-content">
-            <section id="Hauptgerichte" class="menu-section">
-                <h2 class="section-title">Hauptgerichte</h2>
+            <section id="Suppen" class="menu-section">
+                <h2 class="section-title">Suppen</h2>
                 <div class="menu-grid">
                     <div class="menu-card" data-id="01">
-                        <img src="https://www.hungrylankan.com/wp-content/uploads/2022/12/dosa-and-sambar-1.jpg" alt="Tandoori Chicken" class="card-image">
+                        <img src="" alt="Dal" class="card-image">
                         <div class="card-content">
                             <div class="card-header">
-                                <h3 class="dish-name">#01 Tandoori Chicken</h3>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="background: var(--primary); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">S01</span>
+                                    <h3 class="dish-name">Mulligatawny Suppe</h3>
+                                </div>
                                 <span class="dish-price">15,50€</span>
                             </div>
                             <p class="dish-description">Zartes Hühnerfleisch, mariniert in Joghurt, Knoblauch und Ingwer, am Spieß im Tandoor-Ofen gegrillt.</p>
@@ -574,270 +583,6 @@
                                     <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
                                 </div>
                                 <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="menu-card" data-id="02">
-                        <img src="https://mattcooperbites.com/wp-content/uploads/2023/11/Tikka.jpg" alt="Chicken Tikka" class="card-image">
-                        <div class="card-content">
-                            <div class="card-header">
-                                <h3 class="dish-name">#02 Chicken Tikka</h3>
-                                <span class="dish-price">13,50€</span>
-                            </div>
-                            <p class="dish-description">Saftige Hähnchenstücke, 24 Stunden in aromatischen Gewürzen mariniert und anschließend am Spieß im Tandoor-Ofen gegrillt.</p>
-                            <div class="card-footer">
-                                <div class="dietary-info">
-                                    <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                </div>
-                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="menu-card" data-id="03">
-                        <img src="https://cdn3.didevelop.com/public/cdn/533_df5ebcbeb2c37b0a5c3fd0ee5198c99b.jpeg" alt="Tandoori Garnelen" class="card-image">
-                        <div class="card-content">
-                            <div class="card-header">
-                                <h3 class="dish-name">#03 Tandoori Garnelen</h3>
-                                <span class="dish-price">22,50€</span>
-                            </div>
-                            <p class="dish-description">Garnelen, 24 Stunden in Gewürzen mariniert, anschließend im traditionellen Tonofen gebacken, serviert mit Zitronen und Joghurt.</p>
-                            <div class="card-footer">
-                                <div class="dietary-info">
-                                    <i class="fas fa-fish" title="Nicht vegetarisch"></i>
-                                </div>
-                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="menu-card" data-id="04">
-                        <img src="https://smokeandflame.net/cdn/shop/articles/Screenshot_2024-02-24_053330_800x.png?v=1708753216" alt="Indischer Grill Mix" class="card-image">
-                        <div class="card-content">
-                            <div class="card-header">
-                                <h3 class="dish-name">#04 Indischer Grillmix</h3>
-                                <span class="dish-price">26,90€</span>
-                            </div>
-                            <p class="dish-description">Eine köstliche Auswahl aus dem Tandoor-Grill: gegrillter Lamm, Hähnchen und Meeresfrüchte – perfekt für Fleischliebhaber</p>
-                            <div class="card-footer">
-                                <div class="dietary-info">
-                                    <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                </div>
-                                <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                            </div>
-                        </div>
-                    </div>
-                    <main class="menu-content">
-                        <section id="ChickenCurrys" class="menu-section">
-                            <h2 class="section-title">Chicken Currys</h2>
-                            <div class="menu-grid">
-                                <div class="menu-card" data-id="05">
-                                    <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2022/08/chicken-korma-recipe.jpg" alt="Chicken Korma" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#05 Chicken Korma</h3>
-                                            <span class="dish-price">13,90€</span>
-                                        </div>
-                                        <p class="dish-description">Hühnerfleisch, spezieal korma sauce, nüss und sahne mit indisch Gewürzen</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="06">
-                                    <img src="https://www.samaheats.com/wp-content/uploads/2024/03/Untitled-design-15-500x500.png" alt="Butter Chicken" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#06 Butter Chicken</h3>
-                                            <span class="dish-price">14,50€</span>
-                                        </div>
-                                        <p class="dish-description">Im Tandoor zubereitetes, mariniertes Hühnerfleisch, serviert in einer mit Gewürzen und Tomaten angereicherten Buttersauce</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="07">
-                                    <img src="https://www.kitchensanctuary.com/wp-content/uploads/2020/02/Chicken-Madras-square-FS-35.jpg" alt="Chicken Madras" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#07 Chicken Madras</h3>
-                                            <span class="dish-price">13,50€</span>
-                                        </div>
-                                        <p class="dish-description">Ein Spezialgericht aus Südindien mit Kokosmilch, einer Knoblauchmischung & Ingwer</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="08">
-                                    <img src="https://www.shemins.com/wp-content/uploads/2017/03/shemins-chicken-tikka-masala-LR-1280x1280.jpg" alt="Chicken Tikka Masala" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#08 Chicken Tikka Masala</h3>
-                                            <span class="dish-price">14,50€</span>
-                                        </div>
-                                        <p class="dish-description">Zarte Hühnerfleischstücke in Ingwer, Knoblauch und Joghurt mariniert mit speziellen Kräutern und Gewürzen im Tandoor gegrillt, mit Butter in frischer Tomaten-Cashew Sauce kurz gebraten.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="09">
-                                    <img src="https://theazizkitchen.com/wp-content/uploads/2021/08/Image_3.jpg" alt="Chicken Chana" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#09 Chicken Chana</h3>
-                                            <span class="dish-price">12,90€</span>
-                                        </div>
-                                        <p class="dish-description">Mit Hähnchenfleisch, Kichererbsen & pikanter Currysoße.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="10">
-                                    <img src="https://nishkitchen.com/wp-content/uploads/2018/05/Chicken-Vindaloo-1B.jpg" alt="Chicken Vindaloo" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#10 Chicken Vindaloo</h3>
-                                            <span class="dish-price">13,90€</span>
-                                        </div>
-                                        <p class="dish-description">Zarte Hühnerfleischstücke in in einer pikanten Sauce gegart und mit Gewürz, zwiebeln und jungen Kartoffeln serviert.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="11">
-                                    <img src="https://www.whiskaffair.com/wp-content/uploads/2021/10/Andhra-Chicken-Curry-2-3.jpg" alt="Chicken-Curry" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#11 Chicken-Curry</h3>
-                                            <span class="dish-price">13,90€</span>
-                                        </div>
-                                        <p class="dish-description">Saftiges hähnchenfleisch in pikanter Currysauce aus Ingwer, Zwiebeln, Knoblauch und indische Gewürze</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="12">
-                                    <img src="https://www.hairybikers.com/uploads/images/_recipeImage/ChickenJalfrazi.jpg" alt="Chicken Jhal Farezi" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#12 Chicken Jhal Farezi</h3>
-                                            <span class="dish-price">14,90€</span>
-                                        </div>
-                                        <p class="dish-description">Scharfes Curry mit Hühnerfilet, Zwiebeln, Ingwer, Chili, Tomaten & Paprika.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="13">
-                                    <img src="https://www.theendlessmeal.com/wp-content/uploads/2020/04/Mango-Chicken-Curry.jpg" alt="Chicken Mango" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#13 Chicken Mango</h3>
-                                            <span class="dish-price">14,50€</span>
-                                        </div>
-                                        <p class="dish-description">Eine Mischung aus Mango verleiht diesem Curry seinen unverwechselbaren, lebendigen Geschmack. Ein süßes, sowie herzhaftes modernes indisches Gericht.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="14">
-                                    <img src="https://thebigmansworld.com/wp-content/uploads/2023/12/chicken-saag-recipe.jpg" alt="Chicken Saag" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#14 Chicken Saag</h3>
-                                            <span class="dish-price">13,90€</span>
-                                        </div>
-                                        <p class="dish-description">Ein Curry mit Spinat & Hähnchenfleisch nach indischer Art.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="15">
-                                    <img src="https://notacurry.com/wp-content/uploads/2021/01/garlic-chicken-recipe-china-town-style-500x500.jpg" alt="Chilli Chicken" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#15 Chilli Chicken</h3>
-                                            <span class="dish-price">13,90€</span>
-                                        </div>
-                                        <p class="dish-description">Hähnchenfleisch, knoblauch, zwiebeln, ingwer, Paprika & soya soße.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                                <i class="fas fa-pepper-hot" title="Scharf"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
-                
-                                <div class="menu-card" data-id="16">
-                                    <img src="https://gusscooks.com/wp-content/uploads/2020/10/curry-1-683x1024.jpg" alt="Chicken Veg" class="card-image">
-                                    <div class="card-content">
-                                        <div class="card-header">
-                                            <h3 class="dish-name">#16 Chicken Veg</h3>
-                                            <span class="dish-price">12,90€</span>
-                                        </div>
-                                        <p class="dish-description">Mit Hähnchenfleisch, Gemüse & mittelscharfer Soße.</p>
-                                        <div class="card-footer">
-                                            <div class="dietary-info">
-                                                <i class="fas fa-drumstick-bite" title="Nicht vegetarisch"></i>
-                                            </div>
-                                            <button class="favorite-btn" aria-label="Als Favorit markieren">🤍</button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -921,23 +666,6 @@
         });
 
         // Update favorites panel
-        function updateFavorites() {
-            favCount.textContent = favorites.length;
-            favoritesList.innerHTML = '';
-            favorites.forEach(id => {
-                const card = document.querySelector(`[data-id="${id}"]`);
-                if (card) {
-                    const name = card.querySelector('.dish-name').textContent;
-                    const price = card.querySelector('.dish-price').textContent;
-                    favoritesList.innerHTML += `
-                        <div class="favorite-item">
-                            <strong>${name}</strong>
-                            <div>${price}</div>
-                        </div>
-                    `;
-                }
-            });
-        }
         let touchStartX = 0;
         let touchEndX = 0;
         const swipeThreshold = 50;
