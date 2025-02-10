@@ -447,16 +447,16 @@
         }
 
         .favorite-item {
-        position: relative;
-        transition: all 0.3s ease;
-        transform-origin: right;
-        background: white;
-        overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            transform-origin: right;
+            background: white;
+            overflow: hidden;
         }
         .favorite-item.swiping {
         cursor: grabbing;
         }
-            .favorite-item.removing {
+        .favorite-item.removing {
             transform: translateX(-100%);
             opacity: 0;
             height: 0;
@@ -478,13 +478,33 @@
             transition: transform 0.3s ease;
         }
         .favorite-item-content {
-            padding: 0.5rem;
+            position: relative;
+            background: white;
+            padding: 0.75rem;
             border-bottom: 1px solid #E6D5C5;
+            z-index: 2;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.25rem;
         }
-
+        .delete-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: #ff4444;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1;
+        }
+        .favorite-item.swiping .favorite-item-content {
+            cursor: grabbing;
+        }
         .favorite-btn.active {
                 color: #FF4081;
         }
@@ -960,6 +980,7 @@
                 behavior: 'smooth'
             });
         };
+        
         function updateFavorites() {
     favCount.textContent = favorites.length;
     favoritesList.innerHTML = '';
@@ -972,19 +993,17 @@
             itemElement.className = 'favorite-item';
             itemElement.dataset.id = id;
             itemElement.innerHTML = `
+                <div class="delete-bg">Delete</div>
                 <div class="favorite-item-content">
                     <strong>${name}</strong>
-                    <div>${price}</div>
-                </div>
-                <div class="swipe-hint">
-                    <i class="fas fa-trash"></i>
+                    <div class="price">${price}</div>
                 </div>
             `;
             
             // Add swipe functionality to each item
             let touchStartX = 0;
-            let touchEndX = 0;
-            let currentTranslate = 0;
+            let currentX = 0;
+            const content = itemElement.querySelector('.favorite-item-content');
             
             itemElement.addEventListener('touchstart', e => {
                 touchStartX = e.touches[0].clientX;
@@ -992,20 +1011,19 @@
             });
 
             itemElement.addEventListener('touchmove', e => {
-                const currentX = e.touches[0].clientX;
+                currentX = e.touches[0].clientX;
                 const diff = currentX - touchStartX;
                 if (diff < 0) { // Only allow left swipe
-                    currentTranslate = Math.max(diff, -100);
-                    itemElement.style.transform = `translateX(${currentTranslate}px)`;
+                    const translate = Math.max(diff, -100);
+                    content.style.transform = `translateX(${translate}px)`;
                 }
             });
 
             itemElement.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].clientX;
-                const swipeDistance = touchEndX - touchStartX;
+                const swipeDistance = currentX - touchStartX;
                 itemElement.classList.remove('swiping');
                 
-                if (swipeDistance < -100) { // Threshold to trigger remove
+                if (swipeDistance < -50) { // Reduced threshold for easier deletion
                     // Remove from favorites
                     itemElement.classList.add('removing');
                     setTimeout(() => {
@@ -1020,7 +1038,7 @@
                     }, 300);
                 } else {
                     // Reset position if not swiped enough
-                    itemElement.style.transform = '';
+                    content.style.transform = '';
                 }
             });
 
