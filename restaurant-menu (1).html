@@ -447,8 +447,42 @@
         }
 
         .favorite-item {
+        position: relative;
+        transition: all 0.3s ease;
+        transform-origin: right;
+        background: white;
+        overflow: hidden;
+        }
+        .favorite-item.swiping {
+        cursor: grabbing;
+        }
+            .favorite-item.removing {
+            transform: translateX(-100%);
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .swipe-hint {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background: #ff4444;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .favorite-item-content {
             padding: 0.5rem;
             border-bottom: 1px solid #E6D5C5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .favorite-btn.active {
@@ -926,6 +960,74 @@
                 behavior: 'smooth'
             });
         };
+        function updateFavorites() {
+    favCount.textContent = favorites.length;
+    favoritesList.innerHTML = '';
+    favorites.forEach(id => {
+        const card = document.querySelector(`[data-id="${id}"]`);
+        if (card) {
+            const name = card.querySelector('.dish-name').textContent;
+            const price = card.querySelector('.dish-price').textContent;
+            const itemElement = document.createElement('div');
+            itemElement.className = 'favorite-item';
+            itemElement.dataset.id = id;
+            itemElement.innerHTML = `
+                <div class="favorite-item-content">
+                    <strong>${name}</strong>
+                    <div>${price}</div>
+                </div>
+                <div class="swipe-hint">
+                    <i class="fas fa-trash"></i>
+                </div>
+            `;
+            
+            // Add swipe functionality to each item
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let currentTranslate = 0;
+            
+            itemElement.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                itemElement.classList.add('swiping');
+            });
+
+            itemElement.addEventListener('touchmove', e => {
+                const currentX = e.touches[0].clientX;
+                const diff = currentX - touchStartX;
+                if (diff < 0) { // Only allow left swipe
+                    currentTranslate = Math.max(diff, -100);
+                    itemElement.style.transform = `translateX(${currentTranslate}px)`;
+                }
+            });
+
+            itemElement.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].clientX;
+                const swipeDistance = touchEndX - touchStartX;
+                itemElement.classList.remove('swiping');
+                
+                if (swipeDistance < -100) { // Threshold to trigger remove
+                    // Remove from favorites
+                    itemElement.classList.add('removing');
+                    setTimeout(() => {
+                        const cardToUpdate = document.querySelector(`[data-id="${id}"]`);
+                        if (cardToUpdate) {
+                            const favBtn = cardToUpdate.querySelector('.favorite-btn');
+                            favBtn.textContent = '🤍';
+                        }
+                        favorites = favorites.filter(fid => fid !== id);
+                        localStorage.setItem('favorites', JSON.stringify(favorites));
+                        updateFavorites();
+                    }, 300);
+                } else {
+                    // Reset position if not swiped enough
+                    itemElement.style.transform = '';
+                }
+            });
+
+            favoritesList.appendChild(itemElement);
+        }
+    });
+}
 
         // Initial update
         updateFavorites();
