@@ -8,6 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
+
         :root {
             --primary: #8B0000;
             --secondary: #FFA000;
@@ -85,7 +86,9 @@
         }
 
         .container {
-            padding-top: 1rem;
+            padding: 1rem 1rem;  /* Increase horizontal padding */
+            max-width: 1400px;   /* Optional: to prevent stretching too wide */
+            margin: 0 auto;      /* Center the container */
         }
 
         .hamburger-menu {
@@ -234,6 +237,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             position: relative;
+            margin-bottom: 0.5rem;  /* Add bottom margin */
         }
 
         .menu-card:hover {
@@ -253,7 +257,7 @@
         }
 
         .card-content {
-            padding: 1.5rem;
+            padding: 1.75rem;  /* Increase from 1.5rem to 1.75rem */
         }
 
         .card-header {
@@ -372,17 +376,24 @@
             }
 
             .menu-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 2.5rem;  /* Increase from 2rem to 2.5rem */
+                padding: 0 0.5rem;  /* Add slight padding to the grid */
             }
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 0.5rem;
+                padding: 1rem 0.75rem;  /* Slightly smaller padding on mobile */
             }
             
             .menu-grid {
-                gap: 1rem;
+                gap: 1.5rem;  /* Slightly smaller gap on mobile */
+            }
+            
+            .card-content {
+                padding: 1.5rem;  /* Slightly smaller padding on mobile */
             }
         }
 
@@ -547,20 +558,19 @@
                 <a href="#Vorspeisen" class="category-link">Vorspeisen</a>
                 <a href="#IndischesBrot" class="category-link">Indisches Brot</a>
                 <a href="#Hauptgerichte" class="category-link">Hauptgerichte</a>
-                <a href="#Orientalische" class="category-link">Orientalische</a>
                 <a href="#Lammgerichte" class="category-link">Lammgerichte</a>
                 <a href="#ChickenCurry" class="category-link">Chicken Curry</a>
                 <a href="#Vegetarische" class="category-link">Vegetarische</a>
                 <a href="#Biryani" class="category-link">Biryani</a>
                 <a href="#Beilagen" class="category-link">Beilagen</a>
-                <a href="#Salad" class="category-link">Salad</a>
+                <a href="#Salat" class="category-link">Salat</a>
                 <a href="#MeeresSpezialitaten" class="category-link">Meeres Spezialitäten</a>
                 <a href="#KinderMenu" class="category-link">Kinder Menu</a>
-                <a href="#Dessert" class="category-link">Dessert</a>
+                <a href="#Nachtisch" class="category-link">Nachtisch</a>
                 <a href="#Tee" class="category-link">Tee</a>
-                <a href="#Indische" class="category-link">Indische</a>
-                <a href="#Getranke" class="category-link">Getränke</a>
-                <a href="#AlkoholischeGetranke" class="category-link">Alkoholische Getränke</a>
+                <a href="#IndischeGetranke" class="category-link">Indische Getranke</a>
+                <a href="#Erfrischungsgetränke" class="category-link">Erfrischungsgetränke</a>
+                <a href="#AlkoholischeGetranke" class="category-link">Alkoholische und Alkoholfreie Getränke</a>
             </div>
         </nav>  
 
@@ -627,10 +637,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
-    </div>
+                    <main class="menu-content">
+                    </main>
+                </section>
+
                 <section id="Vorspeisen" class="menu-section">
                     <h2 class="section-title">Vorspeisen</h2>
                     <div class="menu-grid">
@@ -753,9 +763,9 @@
                                 </div>
                             </div>
                         </div>
+                        <main class="menu-content">
+                        </main>
                     </section>
-                </main>
-            </div>
                         <section id="IndischesBrot" class="menu-section">
                             <h2 class="section-title">Indisches Brot</h2>
                             <div class="menu-grid">
@@ -899,9 +909,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </section>
-                        </main>
-                    </div>
+                                <main class="menu-content">
+                                </main>
+                            </section>  
                                 
 
                             <section id="Hauptgerichte" class="menu-section">
@@ -986,10 +996,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </section>
-                        </main>
-                    </div>
+                                    <main class="menu-content">
+                                    </main>
+                                </section>
 
                                     <section id="Lammgerichte" class="menu-section">
                                         <h2 class="section-title">Lammgerichte</h2>
